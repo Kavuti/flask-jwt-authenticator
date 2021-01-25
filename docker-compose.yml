@@ -1,0 +1,29 @@
+version: '3'
+services:
+  auth:
+    build: .
+    container_name: jwt-auth-service
+    ports:
+      - "5000:5000"
+    networks:
+      - jwt-auth-network
+  db:
+    image: postgres:13.1-alpine
+    container_name: jwt-auth-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - jwt-auth-network
+volumes:
+  jwt-auth-db-volume:
+    driver: local
+
+
+
+networks:
+  jwt-auth-network:
+    driver: bridge
