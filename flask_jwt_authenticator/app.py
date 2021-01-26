@@ -1,15 +1,17 @@
 import os
 import hashlib
 from flask import Flask
-from flask_jwt import JWT
+from flask_jwt import JWT, jwt_required
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import safe_str_cmp
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('JWT_AUTH_DATABASE_URI')
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
-from model import db
-db.create_all()
-
-from model import User
+from user import User
 
 
 def authenticate(username, password):
