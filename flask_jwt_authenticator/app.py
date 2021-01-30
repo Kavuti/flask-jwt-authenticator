@@ -1,5 +1,7 @@
 import os
 import hashlib
+import logging
+from db import db
 from flask import Flask
 from flask_jwt import JWT, jwt_required
 from flask_migrate import Migrate
@@ -8,10 +10,12 @@ from werkzeug.security import safe_str_cmp
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('JWT_AUTH_DATABASE_URI')
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+print(app.config['SQLALCHEMY_DATABASE_URI'])
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 from user import User
+db.init_app(app)
+migrate = Migrate(app, db)
 
 
 def authenticate(username, password):
@@ -35,7 +39,4 @@ def get_identity():
 
 
 if __name__ == "__main__":
-    if os.getenv('JWT_AUTH_DEBUG'):
-        app.run()
-    else:
-        bjoern.run(app, "0.0.0.0", 5000)
+    app.run()

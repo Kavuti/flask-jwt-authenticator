@@ -1,11 +1,14 @@
-FROM python:3.9.1-alpine3.12
-RUN mkdir /app
-COPY ["flask_jwt_authenticator/*", "requirements.txt", "/app/"]
-ENV FLASK_APP=app.py
+FROM python:3.9.1-alpine3.12 as python-alpine
+RUN apk update && \
+    apk add postgresql-dev gcc python3-dev musl-dev
 
+FROM python-alpine
+RUN mkdir /app
+COPY ["*", "/app/"]
 WORKDIR /app
-RUN pip install -r requirements.txt && \
-    flask db init && \
-    flask db migrate && \
+ENV FLASK_APP=app.py
+RUN pip install -r requirements.txt
+RUN pwd && ls
+RUN flask db migrate && \
     flask db upgrade
 CMD [ "python", "app.py" ]
