@@ -4,7 +4,6 @@ import logging
 from db import db
 from flask import Flask
 from flask_jwt import JWT, jwt_required
-from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import safe_str_cmp
 
@@ -15,8 +14,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 from user import User
 db.init_app(app)
-migrate = Migrate(app, db)
 
+with app.app_context():
+    db.create_all()
 
 def authenticate(username, password):
     db_user = User.query.filter_by(username=username).first()

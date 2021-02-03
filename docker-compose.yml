@@ -1,16 +1,6 @@
 version: '3'
 
 services:
-  auth:
-    image: flask-jwt-authenticator
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: jwt-auth-service
-    ports:
-      - "5000:5000"
-    networks:
-      - jwt-auth-network
   db:
     image: postgres:13.1-alpine
     container_name: "${DATABASE_HOST}"
@@ -20,8 +10,27 @@ services:
       - "POSTGRES_DB=postgres"
     ports:
       - "${DATABASE_PORT}:${DATABASE_PORT}"
+    volumes:
+      - jwt-auth-db-volume:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - jwt-auth-network
+  auth:
+    image: flask-jwt-authenticator
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: jwt-auth-service
+    restart: on-failure
+    env_file:
+      - ./.env
+    ports:
+      - "8000:8000"
+    networks:
+      - jwt-auth-network
+    depends_on:
+      - db
+  
 
 volumes:
   jwt-auth-db-volume:

@@ -6,9 +6,7 @@ FROM python-alpine
 RUN mkdir /app
 COPY ["*", "/app/"]
 WORKDIR /app
-ENV FLASK_APP=app.py
+ENV FLASK_APP=/flask_jwt_authenticator/app.py
 RUN pip install -r requirements.txt
-RUN pwd && ls
-RUN flask db migrate && \
-    flask db upgrade
-CMD [ "python", "app.py" ]
+
+ENTRYPOINT [ "gunicorn", "-w 4", "--bind=0.0.0.0", "app:app" ]
