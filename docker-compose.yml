@@ -12,7 +12,7 @@ services:
       - "${DATABASE_PORT}:${DATABASE_PORT}"
     volumes:
       - jwt-auth-db-volume:/var/lib/postgresql/data
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./flask_jwt_authenticator/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - jwt-auth-network
   auth:

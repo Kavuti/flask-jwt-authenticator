@@ -1,4 +1,6 @@
 from db import db
+import hashlib
+import os
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -14,3 +16,9 @@ class User(db.Model):
     def save(self):
         db.session.add(self)
         db.session.commit()
+
+def get_hashed_pass(password):
+    hasher = hashlib.sha256()
+    hasher.update(bytes(password, 'utf-8'))
+    hasher.update(bytes(os.getenv('JWT_AUTH_SECRET_KEY', 'supersecretpeppersalt'), 'utf-8'))
+    return hasher.hexdigest()

@@ -4,9 +4,10 @@ RUN apk update && \
 
 FROM python-alpine
 RUN mkdir /app
-COPY ["*", "/app/"]
+COPY ["/", "init.sql", "requirements.txt", "/app/"]
 WORKDIR /app
-ENV FLASK_APP=/flask_jwt_authenticator/app.py
 RUN pip install -r requirements.txt
+WORKDIR /app/flask_jwt_authenticator
+ENV FLASK_APP=app.py
 
 ENTRYPOINT [ "gunicorn", "-w 4", "--bind=0.0.0.0", "app:app" ]
