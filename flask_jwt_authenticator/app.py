@@ -8,8 +8,8 @@ from werkzeug.security import safe_str_cmp
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('JWT_AUTH_DATABASE_URI')
-print(app.config['SQLALCHEMY_DATABASE_URI'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = os.getenv('JWT_AUTH_SECRET_KEY')
 
 from endpoints import endpoints_bp
 from model.user import User, get_hashed_pass

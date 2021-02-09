@@ -1,6 +1,9 @@
 from db import db
 import hashlib
+import logging
 import os
+
+logger = logging.getLogger('root')
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -18,7 +21,8 @@ class User(db.Model):
         db.session.commit()
 
 def get_hashed_pass(password):
+    logger.info(os.getenv('JWT_AUTH_SECRET_KEY'))
     hasher = hashlib.sha256()
     hasher.update(bytes(password, 'utf-8'))
-    hasher.update(bytes(os.getenv('JWT_AUTH_SECRET_KEY', 'supersecretpeppersalt'), 'utf-8'))
+    hasher.update(bytes(os.getenv('JWT_AUTH_SECRET_KEY'), 'utf-8'))
     return hasher.hexdigest()
