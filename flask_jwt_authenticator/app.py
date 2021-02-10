@@ -19,7 +19,6 @@ app.register_blueprint(endpoints_bp)
 with app.app_context():
     db.create_all()
 
-
 def authenticate(username, password):
     db_user = User.query.filter_by(username=username).first()
     if db_user and safe_str_cmp(db_user.password.encode('utf-8'), get_hashed_pass(password)):
