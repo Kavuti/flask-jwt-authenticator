@@ -49,9 +49,4 @@ def register():
         'status': 'success'
     }), 200
 
-
-# @endpoints_bp.route("/identity")
-# @jwt_required
-# def remove_myself():
-
     
